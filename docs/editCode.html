@@ -1,0 +1,1537 @@
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+	*
+	{
+		font-family: Sans-Serif;
+		fon-size:3.5mm;
+	}
+	
+	.gutter
+	{
+		position: absolute;
+		top:0;
+		bottom:0;
+		left:0;
+		width:8mm;
+		height:100%;
+		overflow:scroll;
+		background-color:#ccc;
+		z-index:2;
+		font-size:3.5mm;
+		padding: 5mm 1mm 10mm 1mm;
+		text-align:right;
+	}
+	.txt
+	{
+		position: absolute;
+		top:0;
+		bottom:0;
+		left:9mm;
+		margin:0;
+		width:1000mm;
+		height: 100%;
+		padding: 5mm 1mm 10mm 1mm;
+		border: none;
+		font-size:3.5mm;
+		display:none;
+	}
+	.title
+	{
+		z-index:1000; 
+		color:#060; 
+		position:absolute; 
+		top:0; 
+		left:0; 
+		background-color:rgba(255,200,100,0.8);
+	}
+	
+	.menubtn
+	{
+		position: absolute;
+		right:0;
+		transform:translate(100%,0);
+		width:8mm;
+		height:10mm;
+		z-index:100;
+	}
+	.menu
+	{
+		position:absolute;
+		top:0;
+		bottom:0;
+		left:0;
+		transform: translate(-100%,0);
+		z-index:100;
+		padding:5mm 2mm 2mm 2mm;
+		height:100%;
+		color:#000;
+	}
+	
+	.mainbtn
+	{
+		top: 10mm;
+		background-color:rgba(200,100,255,0.6);
+	}
+	.main
+	{
+		background-color:rgba(200,100,255,0.9);
+		border: 1px solid rgba(200,100,255,1);
+	}
+	
+	.filebtn
+	{
+		top: 21mm;
+		background-color:rgba(100,255,200,0.6);
+	}
+	.file
+	{
+		background-color:rgba(100,255,200,0.9);
+	}
+	
+	.pullbtn
+	{
+		top: 32mm;
+		background-color:rgba(100,200,255,0.6);
+	}
+	.pull
+	{
+		background-color:rgba(100,200,255,0.9);
+	}
+	
+	.qsave
+	{
+		position: absolute;
+		top:45mm;
+		left:0;
+		width:6mm;
+		height:4mm;
+		background-color:rgba(255,250,0,0.6);
+		z-index:100;
+		font-size:2.5mm;
+		padding:2mm 1mm;
+	}
+	
+	.wiz
+	{
+		position: absolute;
+		top: 0;
+		left:0;
+		bottom:0;
+		right:0;
+		width:100%;
+		height:100%;
+		background-color:#fff;
+		display: none;
+	}
+	
+	.fview
+	{
+		z-index:3000;
+		display: none;
+	}
+	
+	.fvFiles
+	{
+		padding-bottom:10mm;
+	}
+	.fileItem
+	{
+		padding: 2mm 0;
+		border-bottom: 0.25mm solid #aaa;
+	}
+		
+	.showmenu
+	{
+		transform: translate(0,0);
+		z-index:101;
+	}
+	
+	.listViewItem
+	{
+		border:1px solid #aaa;
+	}
+	
+	.show
+	{
+		display:inline-block;
+	}
+	
+	
+</style></head>
+
+<body>
+<script>
+function btoa1(str)
+{
+	return window.btoa(unescape(encodeURIComponent(str)));
+}
+var $q=(function ()
+{
+	function at(func)
+	{
+		this.__func=func;
+		this.__func();
+	}
+	function a(id, func)
+	{
+		this.$v= this.$at.querySelectorAll(id);
+		if(func)
+		{
+			for(this.$count=0; this.$count<this.$v.length; this.$count++)
+			{
+				var ne =_new();
+				ne.$count=this.$count;
+				ne.$v=this.$v;
+				ne.$at=this.$v[this.$count];
+				ne.at(func);
+			}
+		}
+		return this;
+	}
+	function s(id,func)
+	{
+		var ne=_new();
+		if(typeof id === "string") ne.$at=this.$at.querySelector(id);
+		else ne.$at=id;
+		if(ne.$at)
+		{
+			if(func)ne.at(func);
+			return ne;
+		}
+		return null;
+	}
+	function html(text)
+	{
+		if(text)
+		{
+			this.$at.innerHTML=text;
+			return this;
+		}
+		return this.$at.innerHTML;
+	}
+	function attr(id,text)
+	{
+		if(text)
+		{
+			this.$at.setAttribute(id,text);
+			return this;
+		}
+		else return this.$at.getAttribute(id);
+	}
+	function rattr(id)
+	{
+		this.$at.removeAttribute(id,text);
+		return this;
+	}
+	function create(text)
+	{
+		var ne=_new();
+		if(typeof text === "string")
+		{
+			var el=document.createElement('span');
+			el.innerHTML=text;
+			ne.$at=el.children[0];
+		}
+		else
+		{
+			ne.$at=text;
+		}
+		return ne;
+	}
+	function remove()
+	{
+		this.$at.remove();
+	}
+	function append(text)
+	{
+		if(typeof text === "string") this.$at.insertAdjacentHTML('beforeend', text);
+		else if(text.$at!=undefined)this.$at.appendChild(text.$at);
+		else this.$at.appendChild(text);
+		return this;
+	}
+	function val(text)
+	{
+		if(text)
+		{
+			this.$at.value=text;
+			return this;
+		}
+		return this.$at.value;
+	}
+	function hasClass(text)
+	{
+		return this.$at.classList.contains(text);
+	}
+	function aclass(text)
+	{
+		this.$at.classList.add(text);
+		return this;
+	}
+	function rclass(text)
+	{
+		this.$at.classList.remove(text);
+	}
+	function sclass(text1,text2)
+	{
+		this.$at.classList.remove(text1);
+		this.$at.classList.add(text2);
+		return this;
+	}
+	function b(list, func)
+	{
+		for(var i=0; i<list.length;i++)
+		{
+			this.$at.addEventListener(list[i],func);
+		}
+	}
+	
+	function ub(list,func)
+	{
+		for(var i=0; i<list.length;i++)
+		{
+			this.$at.removeEventListener(list[i],func);
+		}
+	}
+	function css(key,value)
+	{
+		if(value)
+		{
+			this.$at.style[key]=value;
+			return this;
+		}
+		return this.$at.style[key];
+	}
+	function w(txt)
+	{
+		if(!txt)
+		{
+			return  this.$at.offsetWidth;
+		}
+		this.$at.style.width=txt;
+	}
+	function h(txt)
+	{
+		if(!txt)
+		{
+			return  this.$at.offsetHeight;
+		}
+		this.$at.style.height=txt;
+	}
+	
+	
+	function _new()
+	{
+		return {
+		$at:null,
+		$v:null,
+		$count:null,
+		at:at,
+		a:a,
+		s:s,
+		html:html,
+		attr:attr,
+		rattr:rattr,
+		create:create,
+		remove:remove,
+		append:append,
+		val:val,
+		hasClass:hasClass,
+		aclass:aclass,
+		rclass:rclass,
+		sclass:sclass,
+		b:b,
+		ub:ub,
+		css:css,
+		w:w,
+		h:h
+	};
+	}
+	return _new();
+})();
+$q.$at=document;
+
+	function euri(str)
+	{
+		return encodeURIComponent(str);
+	}
+	function duri(str)
+	{
+		return decodeURIComponent(str);
+	}
+	
+	
+	function $post(u, sdata, callback, error)
+	{
+		var data = new FormData();
+		for(var ss in sdata)
+		{
+			data.append(ss, sdata[ss]);
+		}
+		
+		var xhr = new XMLHttpRequest();
+		/*xhr.setRequestHeader("Content-Type",t);*/
+		xhr.open('POST', u, true);
+		xhr.onload = callback;
+		xhr.onerror = error;
+		xhr.send(data);
+	}
+	function $get(u, callback, error)
+	{
+		
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', u, true);
+		xhr.onload = callback;
+		xhr.onerror = error;
+		xhr.send();
+	}
+	
+	function $postsync(u, t, sdata, callback, error)
+	{
+		var data = new FormData();
+		for(var ss in sdata)
+		{
+			data.append(ss, sdata[ss]);
+		}
+		var xhr = new XMLHttpRequest();
+		xhr.setRequestHeader("Content-Type",t);
+		xhr.open('POST', u, true);
+		xhr.send(data);
+		return xhr;
+		
+	}
+	function $getsync(u, callback, error)
+	{
+		
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', u, true);
+		xhr.send();
+		return xhr;
+		
+	}
+	
+</script>
+	
+
+
+
+	
+	
+
+
+	
+<script>
+function scriptparent()
+{
+	var scriptTag = document.scripts[document.scripts.length - 1];
+	var parentTag = scriptTag.parentNode;
+	return $q.s(parentTag);
+}
+var msgc =(function()
+ {
+       var fa = {};
+       return {
+           handle: function(name, fptr)
+           {
+               if(fa[name] == undefined) fa[name] = [];
+               fa[name].push(fptr);
+           },
+           send: function(name)
+           {
+               if(arguments.length>0)
+               {
+                   var cstr = "a[i](arguments[1]";
+                   for(var i = 2; i < arguments.length; i++)
+                   {
+                       cstr = cstr + ", arguments[" + i + "]";
+                   }
+                   cstr = cstr + ");";
+                   var a = fa[name];
+                   for(var i = 0; i < a.length; i++)
+                   {
+                       eval(cstr);
+                   }
+               }//end if
+               else
+               {
+                   var a = fa[name];
+                   for(var i = 0; i < a.length; i++)
+                   {
+                       a[i]();
+                   }
+               }
+           }
+       };
+})();
+var $h=msgc.handle;
+var $s=msgc.send;
+</script>
+<script>
+	//https://api.github.com/repos/defunkt/ace/contents/build
+//https://api.github.com/users/firefox257
+//https://api.github.com/users/firefox257/repos
+
+
+
+var git = (
+	function()
+	{
+		return {
+
+			getUrl: function(u, call,error)
+			{
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', u, true);
+
+				xhr.responseType = 'text';
+
+				xhr.onload = function () {
+					if (xhr.readyState === xhr.DONE) {
+						if (xhr.status === 200) {
+							//console.log(xhr.response);
+							//console.log(xhr.responseText);
+							call(xhr.responseText);
+						}
+						else if(error)
+						{
+							error(xhr.responseText);
+						}
+					}
+				};
+
+				xhr.send(null);
+			},
+			repos: function(user, call, error)
+			{
+				this.getUrl(`https://api.github.com/users/${user}/repos`, call, error);
+			},
+			repo: function(user, repo, dir, call, error)
+			{
+				if(name != undefined)
+				{ 
+					_repo = name;
+				}
+				this.getUrl(`https://api.github.com/repos/${user}/${repo}/contents${dir}`, call, error);
+			},
+			rawFile: function(user, repo, path, call, error)
+			{
+				//https://raw.githubusercontent.com/firefox257/incode/master/code_edit.js
+				
+				var d = new Date();
+				var n = d.getTime();
+				
+				this.getUrl(`https://raw.githubusercontent.com/${user}/${repo}/master/${path}?unique=${n}`, call, error);
+			},
+			getFile:  function(user, repo, path, call, error)
+			{
+				this.getUrl(`https://api.github.com/repos/${user}/${repo}/contents/${path}?ref=master`, call, error);
+			},
+			commit: function(msg, token, user, repo, path, content, sha, call, error)
+			{
+				var xhr = new XMLHttpRequest();
+				
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4 ){
+						if(xhr.status == 200 || xhr.status == 201) {
+							call(xhr.responseText);
+						}
+						else if(error)
+						{
+							error(xhr.responseText);
+						}
+					}
+				}
+				xhr.open("PUT", `https://api.github.com/repos/${user}/${repo}/contents/${path}`, true);
+				xhr.setRequestHeader("Accept", "application/vnd.github.v3+json");
+				xhr.setRequestHeader("Authorization", `token ${token}`);
+
+				var dto ={
+					message: msg,
+					content: btoa(content),
+					path: path,
+					branch: "master"
+				};
+				if(sha != undefined)
+				{
+					dto.sha=sha;
+				}
+
+				xhr.send(JSON.stringify(dto));
+			}
+
+			
+		};
+	}
+)();
+/*
+git.rawFile("firefox257","incode","codeEdit.js",function(c)
+{
+	alert(c);
+})
+git.rawFile("firefox257", "incode", "code_edit.js", function(t)
+	{
+		alert(t);
+	}
+);
+
+git.commit("f755ae705e2422f96e9300457d497a37b6cc19a8", "firefox257", "testthis", "test1.js", "alert('hi there');", "deedb3237a9dcb65b78ec2988a8565a1ec777dd9", 
+	function(t)
+	{
+		alert(t);
+	}
+);*/
+
+</script>
+<div class="makecode wiz show" style="z-index:2000;" ;="">
+	<input type="button" value="close" onclick="$s('hide code');">
+	<textarea id="makecode" style="width:100%; height:70vh;"></textarea>
+</div>
+	
+<div class="htmlcode wiz" style="z-index:2000;" ;="">
+	<input type="button" value="close" onclick="$s('hide html code');">
+		
+	<!--<iframe id="seecode" style="width:100%; min-height:70vh; overflow:scroll; background-color:#fff;" ></iframe>-->
+	<div id="codeframe">
+	</div>
+		
+</div>
+
+	
+<script>
+
+$h("make code",function(func)
+{
+	
+	var p=$q.s("*[user='pre'][repo='pre'][path='/main']").val();
+	for(var i=0;i<3;i++)
+	$q.a("#fvc *[user][repo][path]",function()
+	{
+		var user=this.attr("user");
+		var repo=this.attr("repo");
+		var path=this.attr("path");
+		
+		var cid=`<!--${user}:${repo}:${path}-->`;
+		p=p.replace(cid,this.val());
+		
+	});
+	
+	eval("p="+p+";");
+	
+	var c=$q.s("*[user='local'][repo='local'][path='/main']").val();
+	c=p(c);
+	for(var i=0;i<3;i++)
+	$q.a("#fvc *[user][repo][path]",function()
+	{
+		var user=this.attr("user");
+		var repo=this.attr("repo");
+		var path=this.attr("path");
+		
+		var tt=p(this.val());
+		var cid=`<!--${user}:${repo}:${path}-->`;
+		c=c.replace(cid,tt);
+		
+	});
+	func(c);
+	
+});
+$h("show code",function()
+{
+	
+	$s("make code",function(c)
+	{
+		$q.s(".makecode").aclass("show");
+		$s("menu hide all");
+		var txt=$q.s("#makecode");
+		txt.val(c);
+		txt.$at.focus();
+		txt.$at.select();
+		
+		
+	});
+});
+
+$h("show edit code",function()
+{
+	$q.s(".makecode").aclass("show");
+	$s("menu hide all");
+	var txt=$q.s("#makecode");
+	txt.val(document.documentElement.outerHTML);
+	txt.$at.focus();
+	txt.$at.select();
+});
+
+$h("hide code",function()
+{
+	$q.s(".makecode").rclass("show");
+});
+
+$h("open window code",function()
+{
+	$s("menu hide all");
+	$s("make code",function(c)
+	{
+		window.open("data:text/html;base64,"+btoa1(c));
+	});
+});
+
+$h("show html code",function()
+{
+	$s("menu hide all");
+	$q.s(".htmlcode").aclass("show");
+	$s("make code",function(c)
+	{
+		//$q.s("#htmlcode").attr("src","data:text/html;base64,"+btoa1(c));
+		var cc=`<iframe src="data:text/html;base64,${btoa1(c)}" style="width:100%; min-height:70vh; overflow:scroll; background-color:#fff;"></iframe>`;
+		$q.s("#codeframe").html(cc);
+	
+	});
+});
+$h("hide html code",function()
+{
+	$q.s("#codeframe").html("");
+	$q.s(".htmlcode").rclass("show");
+});
+
+
+</script>
+<script>
+   function codeedit(id) 
+   {
+       var o=$q.s(id);
+       o.b(['keydown'],function(e)
+       {
+           if(e.keyCode==9)
+           {
+               document.execCommand("insertText",true,"\t");
+               e.preventDefault();
+           }
+       });
+       o.b(['keyup'],function(e)
+       {
+           if(e.keyCode==13)
+           {
+               var s1=o.$at.selectionStart-1;
+               var tx=o.val();
+               var tabc=0;
+               var ttab=0;
+               while(s1>=0 &&(tx[s1]=='\r' || tx[s1]=='\n'))s1--;
+               if(tx[s1]=="{" || tx[s1]==">")ttab=1;
+               while(s1>=0&&tx[s1]!='\r'&&tx[s1]!='\n')
+               {
+                   s1--;
+               }
+               s1++;
+               while(tx[s1+tabc]=='\t')tabc++;
+               for(var i=0;i<tabc+ttab;i++)document.execCommand("insertText",true,"\t");
+           }
+       });
+       
+       var top = o.attr('atscroll');
+       o.$at.scrollTop=parseInt(top);
+       
+       function pointup(e)
+       {
+           o.attr('atscroll',o.$at.scrollTop);
+       }
+       o.b(['scroll'],pointup);
+
+   }
+   
+</script>
+
+<script>
+	$h("menu show",function(o)
+	{
+		var ob=$q.s(o);
+		var has=ob.hasClass("showmenu");
+		$s("menu hide all");
+		if(!has)ob.aclass("showmenu");
+	});
+	$h("menu hide all",function()
+	{
+		$q.a(".menu",function()
+		{
+			this.rclass("showmenu");
+		});
+	});
+</script>
+<div class="listView wiz" style="z-index:2000">
+	<input type="button" value="close" onclick="$s('hide listView');">
+	<br>
+	<input type="button" value="select user" onclick="$s('select git user');">
+	<input id="listUserTxt" type="text">
+	<br>
+	<input type="button" value="select repo" onclick="$s('update git repo');">
+	<input id="listRepoTxt" type="text">
+	<br>
+	<textarea id="listAllTxt" type="text" style="width:80vw;"></textarea>
+	<br>
+	<div id="listRepo">
+	</div>
+</div>
+
+
+<script>
+$h("show listView",function()
+{
+	$s("menu hide all");
+	$q.s(".listView").aclass("show");
+});
+$h("hide listView", function()
+{
+	$q.s(".listView").rclass("show");
+});
+
+$h("menu hide all", function()
+{
+	$s("hide listView");
+});
+
+(function()
+{
+	var dirs=[];
+$h("select git user",function()
+{
+	var user=$q.s("#listUserTxt").val();
+	$q.s("#listRepoTxt").val("");
+	dirs=[];
+	git.repos(user,function(j)
+	{
+		var str="";
+		var c;
+		eval("c="+j+";");
+		for(var i in c)
+		{
+			var repo=c[i].name;
+			str=str+`<div class="listViewItem"  onclick="$s('onselect git repo','${repo}');">${repo}</div>`;
+		}
+		$q.s("#listRepo").html(str);
+	},
+	function(err)
+	{
+		alert("error: "+err);
+	});
+});
+
+
+	
+	$h("onselect git repo",
+	function(repo)
+	{
+		dirs=[];
+		$q.s("#listRepoTxt").val(repo);
+		$s("update git repo");
+	});
+	
+	
+	$h("update git repo",function()
+	{
+		var atdir="/"+dirs.join("/");
+		var user=$q.s("#listUserTxt").val();
+		var repo=$q.s("#listRepoTxt").val();
+		git.repo(user,repo,atdir,
+		function(j)
+		{
+			var c;
+			eval("c="+j+";");
+			var str="";
+			if(dirs.length>0)
+			{
+				str+=`<div onclick="$s('listView pop dirs');">[]..</div>`;
+			}
+			for(var i in c)
+			{
+				var path=c[i].path;
+				var name=c[i].name;
+				var isdir=c[i].type=="dir";
+				if(isdir)
+				{
+					str+=`<div class="listViewItem" onclick="$s('listView push dirs','${name}'); ">
+						[]${path}
+						</div>`;
+				}
+				else
+				{
+					str+=`<div class="listViewItem" onclick="$s('listView update all','${path}');">
+						${path}
+						</div>`;
+				}
+			}
+			$q.s("#listRepo").html(str);
+		},
+		function(err)
+		{
+			alert("error: "+err);
+		});
+		
+	});
+	
+	$h("listView push dirs",
+	function(n)
+	{
+		dirs.push(n);
+		$s("update git repo");
+	});
+	
+	$h("listView pop dirs",function()
+	{
+		if(dirs.length>0)
+		{
+			dirs.pop();
+			$s("update git repo");
+		}
+	});
+	
+	$h("listView update all",function(path)
+	{
+		
+		var user=$q.s("#listUserTxt").val();
+		var repo=$q.s("#listRepoTxt").val();
+		$q.s("#listAllTxt").val(`
+		"${repo}":
+		{
+			user:"${user}",
+			auth:"",
+			paths:
+			[
+			"${path}"
+			]
+		}
+		`);
+	});
+	
+	
+})();
+		
+$h("git get file",function()
+{
+	if(confirm("pull in to override?"))
+	{
+		$s("menu hide all");
+		var at=$q.s(".txt");
+		var user=at.attr("atuser");
+		var repo=at.attr("atrepo");
+		var path=at.attr("atpath");
+		git.rawFile(user,repo,path,function(c)
+		{
+			at.val(c);
+			alert("done");
+			$s("gutter");
+		}, 
+		function(err)
+		{
+			alert("error: "+err);
+		});
+		
+	}
+	
+});
+$h("git push",function()
+{
+	if(confirm("push to git?"))
+	{
+		
+		$s("menu hide all");
+		var at=$q.s(".txt");
+		var user=at.attr("atuser");
+		var repo=at.attr("atrepo");
+		var path=at.attr("atpath");
+		
+		var conf=$q.s("*[user='local'][repo='local'][path='/config']").val();
+		
+		eval("conf="+conf+";");
+		
+		if(conf[repo].auth=="")
+		{
+			alert("no auth provided");
+			return;
+		}
+		
+		
+		git.getFile(user,repo,path,function(c)
+		{
+			var cc;
+			eval("cc="+c+";");
+			git.commit(prompt("Comments"),conf[repo].auth, user,repo,path,at.val(),cc.sha, function()
+			{
+				alert("done");
+			},
+			function(err)
+			{
+				alert("error: "+err);
+			});
+			
+		},
+		function(err)
+		{
+			git.commit(prompt("Comments"),conf[repo].auth, user,repo,path,at.val(),"", function()
+			{
+				alert("done");
+			},
+			function(err)
+			{
+				alert("error: " + err);
+			});
+		});
+		
+	}
+});
+	
+</script>
+
+	<div class="title">/main</div>
+	<div class="gutter">
+	0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br></div>
+ 	<textarea class="txt show" onscroll="$s('gutter top');" onkeyup="$s('gutter');" onpaste="setTimeout(function(){$s('gutter');},200);" atuser="local" atrepo="local" atpath="/main" atscroll="0"></textarea>
+<script>
+(function()
+{
+	var count=0;
+	var g=$q.s(".gutter");
+	var s=$q.s(".txt");
+	
+	$h("gutter",function()
+	{
+		var w1=s.$at.scrollHeight;
+		var w2=g.$at.scrollHeight;
+		while(w2<=w1+300)
+		{
+			g.append(count+"<br/>");
+			w2=g.$at.scrollHeight;
+			count++;
+		}
+	});
+	$h("gutter top",function()
+	{
+		g.$at.scrollTop=s.$at.scrollTop;
+	});
+	$h("gutter reset",function()
+	{
+		g.html("");
+		count=0;
+	});
+	
+	$s("gutter reset");
+})();
+</script>
+<script>
+	$s("gutter");
+	codeedit(".txt");
+	
+	$h("set title",function(t)
+	{
+		$q.s(".title").html(t);
+	});
+
+</script>
+	
+	
+	<div class="menu main">
+		<div class="menubtn mainbtn" onclick="$s('menu show','.main');">
+		</div>
+		<input type="button" value="book" onclick="$s('book');">
+		<br>
+		<br>
+		<input type="button" value="select" onclick="$s('show file view');">
+		
+	</div>
+	<div class="menu file">
+		<div class="menubtn filebtn" onclick="$s('menu show','.file');">
+		</div>
+		<input type="button" value="format" onclick="$s('format');"><br>
+		<br>
+		<input type="button" value="undo" onclick="document.execCommand('undo');"><br>
+		<input type="button" value="redo" onclick="dicument.execCommand('redi');"><br><br>
+		
+		<input type="button" value="win" onclick="$s('open window code');">
+		<br>
+			
+		<input type="button" value="html" onclick="$s('show html code');">
+		<br>
+			
+		<input type="button" value="full code" onclick="$s('show code');">
+		<br>
+		<input type="button" value="full edit code" onclick="$s('show edit code');">
+		<br>
+		<br>
+		
+		
+		
+	</div>
+	<div class="menu pull">
+		<div class="menubtn pullbtn" onclick="$s('menu show','.pull');">
+		</div>
+		
+		<input type="button" value="git pull" onclick="$s('git get file');">
+		<br>
+		<input type="button" value="git push" onclick="$s('git push');">
+		<br>
+		<input type="button" value="git browser" onclick="$s('show listView');">
+		<br>
+	</div>
+	<div class="qsave" onclick="$s('qsave');">qsave</div>
+	<div id="fv" style="display:none;">
+<textarea user="local" repo="local" path="/main" sha="" atscroll="0"> <!doctype html> 
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		</meta>
+	</head>
+	<body>
+	</body>
+</html>
+</textarea>
+	
+<textarea user="local" repo="local" path="/config" sha="" atscroll="0">{
+	"local":
+	{
+		user:"local",
+		auth:"local",
+		paths:
+		[
+			
+		]
+	}
+}
+</textarea>
+<textarea user="pre" repo="pre" path="/main" sha="" atscroll="0">(function()
+{
+	
+	return function(c)
+	{
+		return c;
+	};
+})()
+</textarea>
+	
+	<div id="fvc"></div>
+
+</div>
+
+<div class="wiz fview">
+	<div>
+		<input type="button" value="close" style="margin: 0 0 0 10mm;" onclick="$s('hide file view');">
+	</div>
+	<hr>
+	<div class="fvFiles"></div>
+</div>
+
+
+<script>
+(function()
+{
+	
+	var fv=$q.s("#fv");
+	var fview=$q.s(".fview");
+	var fvFiles=$q.s(".fvFiles");
+	var fvc=$q.s("#fvc");
+	
+	$h("qsave",function()
+	{
+		var txt =$q.s(".txt");
+		var path=txt.attr("atpath");
+		var repo=txt.attr("atrepo");
+		var user=txt.attr("atuser");
+		var atscroll=txt.attr("atscroll");
+		
+		var at=$q.s(`*[user='${user}'][repo='${repo}'][path='${path}']  `);
+		at.html(txt.val());
+		at.attr("atscroll",atscroll);
+		if(user=="local" && repo=="local" && path=="/config")
+		{
+		
+			$s("make files",txt.val());
+		}
+		
+		alert("done");
+	});
+	$h("show file view",function()
+	{
+		$s("menu hide all");
+		var h="";
+		$q.a("*[user][repo][path]",function()
+		{
+			var path=this.attr("path");
+			var repo=this.attr("repo");
+			var user=this.attr("user");
+			
+			h+=`<div class='fileItem' onclick="$s('load file','${user}','${repo}','${path}');">
+			${user}:${repo}:${path}
+			</div>`;
+		});
+		
+		fvFiles.html(h);
+		fview.aclass("show");
+	});
+	$h("hide file view",function()
+	{
+		fview.rclass("show");
+	});
+	
+	$h("load file", function(user,repo,path)
+	{
+		$s("menu hide all");
+		$q.s(".title").html(path);
+		var txt =$q.s(".txt");
+		txt.attr("atuser",user);
+		txt.attr("atrepo", repo);
+		txt.attr("atpath",path);
+		
+		var at1=$q.s(`*[user='${user}'][repo='${repo}'][path='${path}'] `);
+		txt.val(at1.val());
+		txt.attr("atscroll",at1.attr("atscroll"));
+		
+		var top = txt.attr('atscroll');
+		txt.$at.scrollTop=parseInt(top);
+	});
+	
+	$h("menu hide all",function()
+	{
+		$s("hide file view");
+	});
+	$h("make files",function(txt)
+	{
+		var c;
+		eval("c="+txt+";");
+		
+		$q.a("#fvc *[user][repo][path]",function()
+		{
+			var user=this.attr("user");
+			var repo=this.attr("repo");
+			var path=this.attr("path");
+			if(!c[repo] && c[repo].user!=user)
+			{
+				this.remove();
+				return;
+			}
+			
+			for(var i in c[repo].paths)
+			{
+				if(c[repo].paths[i]==path)return;
+			}
+			this.remove();
+		});
+		
+		
+		
+		for(var repo in c)
+		{
+			var user=c[repo].user;
+			for(var i in c[repo].paths)
+			{
+				var path=c[repo].paths[i];
+				try
+				{
+					var t1=$q.s(`*[user='${user}'][repo='${repo}'][path='${path}']`);
+					if(!t1)
+					{
+						fvc.append(`<textarea user="${user}" repo="${repo}" path="${path}" sha="">code</textarea>    `);
+					}
+				}
+				catch(e)
+				{
+					fvc.append(`<textarea user="${user}" repo="${repo}" path="${path}" sha="">code</textarea>    `);
+				}
+				
+			}
+		}
+		
+	});
+	
+	var __at= $q.s(".txt");
+	
+	$s("load file",__at.attr("atuser"),__at.attr("atrepo"),__at.attr("atpath"));
+	
+})();
+//alert(prompt("title\n hdhhd",""));
+//alert(confirm("msgd"));
+</script>
+	
+<script>
+$codeFilter=(function()
+{
+	function strRep(s,c,i)
+	{
+		return s.substr(0, i) + c + s.substr(i + 1);
+	}
+	
+	function isLB(c)
+	{
+		return c=="{" || c=="(" || c == "[";
+	}
+	
+	function isRB(c)
+	{
+		return c=="}" || c==")" || c == "]";
+	}
+	
+	function isE(c)
+	{
+		return c=="\r"|| c=="\n";
+	}
+	
+	function tabs(c)
+	{
+		var s="";
+		for(var i=0; i<c;i++) s+="\t";
+		return s;
+	}
+	
+	function lastC(s, c)
+	{
+		if(c!=undefined)
+		{
+			return strRep(s,c,s.length-1);
+		}
+		return s[s.length-1];
+	}
+	
+	function strEq(s,s1,i)
+	{
+		if((i+s1.length)>=s,length)return false;
+		for(var ii=0;ii<s1.length;ii++)
+		{
+			if(s[i+ii]!=s1[ii]) return false;
+		}
+		return true;
+	}
+	
+	function isSp(c)
+	{
+		return c==" " || c=="\t";
+	}
+	
+	return {
+		cpp: function(tx)
+		{
+			
+			var s="";
+			var i=0;
+			var tc=0;
+			
+			while(i<tx.length)
+			{
+				
+				if(tx[i]=="\t")
+				{
+					i++;
+				}
+				else if(isLB(tx[i]))
+				{
+					s+=tx[i];
+					tc++;
+					i++;
+				}
+				else if(isRB(tx[i]))
+				{
+					if(lastC(s)=="\t")
+					{
+						s=lastC(s, tx[i]);
+					}
+					else
+					{
+						s+=tx[i];
+					}
+					
+					i++
+					tc--;
+				}
+				else if(strEq(tx,"/>",i))
+				{
+					s+="/>";
+					i+=2;
+				}
+				else if(strEq(tx,"-->",i))
+				{
+					s+="-->";
+					i+=3;
+				}
+				else if(strEq(tx,">\r",i)||strEq(tx,">\n",i))
+				{
+					tc++;
+					s+=tx[i];
+					i++;
+				}
+				else if(strEq(tx,"</",i))
+				{
+					if(lastC(s)=="\t")
+					{
+						s=lastC(s, tx[i]);
+					}
+					else
+					{
+						s+=tx[i];
+					}
+					i++;
+					while(i<tx.length&&tx[i]!=">")
+					{
+						s+=tx[i];
+						i++;
+					}
+					s+=tx[i];
+					i++;
+					tc--;
+				}
+				else if(isE(tx[i]))
+				{
+					s+=tx[i];
+					i++;
+					if(isE(tx[i]))
+					{
+						s+=tx[i];
+						i++;
+					}
+					while(isSp(tx[i]))i++;
+					s+=tabs(tc);
+					
+				}
+				else if(tx[i]=="\"")
+				{
+					s+=tx[i];
+					i++;
+					
+					while(i<tx.length && tx[i]!="\"")
+					{
+						if(tx[i]=="\\")
+						{
+							s+=tx[i];
+							i++;
+							s+=tx[i];
+							i++;
+						}
+						else
+						{
+							s+=tx[i];
+							i++;
+						}
+					}
+					s+=tx[i];
+					i++;
+					
+				}
+				else if(tx[i]=="'")
+				{
+					s+=tx[i];
+					i++;
+					while(i<tx.length && tx[i]!="'")
+					{
+						if(tx[i]=="\\")
+						{
+							s+=tx[i];
+							i++;
+							s+=tx[i];
+							i++;
+						}
+						else
+						{
+							s+=tx[i];
+							i++;
+						}
+					}
+					s+=tx[i];
+					i++;
+				}
+				else if(tx[i]=="`")
+				{
+					s+=tx[i];
+					i++;
+					while(i<tx.length && tx[i]!="`")
+					{
+						if(tx[i]=="\\")
+						{
+							s+=tx[i];
+							i++;
+							s+=tx[i];
+							i++;
+						}
+						else
+						{
+							s+=tx[i];
+							i++;
+						}
+					}
+					s+=tx[i];
+					i++;
+				}
+				else if(strEq(tx,"R\"(",i))
+				{
+					s+="R\"(";
+					i+=3;
+						
+					while(i<tx.length && !strEq(tx,")\"",i))
+					{
+						if(tx[i]=="\\")
+						{
+							s+=tx[i];
+							i++;
+							s+=tx[i];
+							i++;
+						}
+						else
+						{
+							s+=tx[i];
+							i++;
+						}
+					}
+					s+=")\"";
+					i+=2;
+					
+				}
+				else if(strEq(tx,"/*",i))
+				{
+					s+="/*";
+					i+=2;
+					
+					while(i<tx.length && !strEq(tx,"*/",i))
+					{
+							s+=tx[i];
+							i++;
+					}
+					s+="*/";
+					i+=2;
+				}
+				else if(strEq(tx,"//",i))
+				{
+					s+="//";
+					i+=2;
+					
+					while(i<tx.length && !isE(tx[i]))
+					{
+						s+=tx[i];
+						i++;
+					}
+					
+				}
+				else
+				{
+					s+=tx[i];
+					i++;
+				}
+				
+			}//end while
+			return s;
+			
+		}//end cpp
+		
+	};
+	
+	
+})();
+$h("book",function()
+{
+	$s("menu hide all");
+	$s("gutter reset");
+	window.open("data:text/html;base64,"+btoa1("<!doctype html>"+document.documentElement.outerHTML));
+});
+$h("format",function()
+{
+	$s("menu hide all");
+	var txt=$q.s(".txt");
+	var t1=$codeFilter.cpp(txt.val());
+	txt.val(t1);
+});
+
+</script>
+	
+
+</body></html>
