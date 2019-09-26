@@ -6,7 +6,44 @@
 		font-family: Sans-Serif;
 		fon-size:3.5mm;
 	}
-	
+	.mzheight
+	{
+		position:absolute;
+		top:0;
+		left:-100;
+		width:1px;
+		height:10000mm;
+	}
+	.mzwin
+	{
+		position:absolute;
+		top:0;
+		left:-100;
+		width:100vw;
+		height:100vh;
+	}
+	.mz
+	{
+		position: absolute;
+		top:-100;
+		left:-100;
+		width:1px;
+		height:1px;
+		overflow:hidden;
+	}
+	.mzgutter
+	{
+		position: absolute;
+		top:0;
+		bottom:0;
+		left:0;
+		height:100vh;
+		background-color:rgba(0,0,0,0);
+		z-index:2;
+		font-size:3.5mm;
+		padding: 0;
+		margin: 0;
+	}
 	.gutter
 	{
 		position: absolute;
@@ -466,6 +503,12 @@ var msgc =(function()
 var $h=msgc.handle;
 var $s=msgc.send;
 </script>
+	<div class="mz">
+		<div class="mzheight">
+		</div>
+		<div class="mzwin"></div>
+		<div class="mzgutter">h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br></div>
+	</div>
 <script>
 	//https://api.github.com/repos/defunkt/ace/contents/build
 //https://api.github.com/users/firefox257
@@ -582,11 +625,6 @@ git.commit("f755ae705e2422f96e9300457d497a37b6cc19a8", "firefox257", "testthis",
 );*/
 
 </script>
-<div class="makecode wiz" style="z-index:2000;" ;="">
-	<input type="button" value="close" onclick="$s('hide code');">
-	<textarea id="makecode" style="width:100%; height:70vh;"></textarea>
-</div>
-	
 <div class="htmlcode wiz" style="z-index:2000;" ;="">
 	<input type="button" value="close" onclick="$s('hide html code');">
 		
@@ -639,14 +677,11 @@ $h("show code",function()
 	
 	$s("make code",function(c)
 	{
-		$q.s(".makecode").aclass("show");
 		$s("menu hide all");
-		var txt=$q.s("#makecode");
+		var txt= $q.s(`*[user="local"][repo="local"][path="clipboard"] `  );
 		txt.val(c);
-		txt.$at.focus();
-		txt.$at.select();
-		
-		
+		$s("load file", "local",  "local", "clipboard");
+		alert("copied to local clip board");
 	});
 });
 
@@ -654,11 +689,10 @@ $h("show edit code",function()
 {
 	
 	$s("menu hide all");
-	var txt=$q.s("#makecode");
+	var txt=$q.s(`*[user="local"][repo="local"][path="clipboard"] `  );
 	txt.val(document.documentElement.outerHTML);
-	$q.s(".makecode").aclass("show");
-	txt.$at.focus();
-	txt.$at.select();
+	$s("load file", "local",  "local", "clipboard");
+	alert("copied to local clip board");
 });
 
 $h("hide code",function()
@@ -980,9 +1014,9 @@ $h("git push",function()
 	
 </script>
 
+
 	<div class="title">/main</div>
-	<div class="gutter">
-	0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br></div>
+	<div class="gutter">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br></div>
  	<textarea class="txt show" onscroll="$s('gutter top');" onkeyup="$s('gutter');" onpaste="setTimeout(function(){$s('gutter');},200);" atuser="local" atrepo="local" atpath="/main" atscroll="0"></textarea>
 <script>
 (function()
@@ -991,20 +1025,51 @@ $h("git push",function()
 	var g=$q.s(".gutter");
 	var s=$q.s(".txt");
 	
+	var linecount =0;
+	var mzgutter=$q.s(".mzgutter");
+	var mzh=$q.s(".mzwin").h();
+	
+	while(mzgutter.$at.scrollHeight<=mzh)
+	{
+		mzgutter.append("h<br/>");
+		linecount++;
+	}
+	var lineh=parseInt(mzh/linecount)+1;
+	
+	//alert(lineh);
+	
+	function calcgutter()
+	{
+		var top=s.$at.scrollTop;
+		var st=parseInt(top/lineh);
+		var tt=top%lineh;
+	
+		var str="";
+		for(var i=0;i<linecount;i++)
+		{
+			str+=`${i+st}<br/>`;
+		}
+		g.html(str);
+		g.$at.scrollTop=tt;
+	}
+	
 	$h("gutter",function()
 	{
-		var w1=s.$at.scrollHeight;
+		/*var w1=s.$at.scrollHeight;
 		var w2=g.$at.scrollHeight;
 		while(w2<=w1+300)
 		{
 			g.append(count+"<br/>");
 			w2=g.$at.scrollHeight;
 			count++;
-		}
+		}*/
+		calcgutter();
 	});
 	$h("gutter top",function()
 	{
-		g.$at.scrollTop=s.$at.scrollTop;
+		//alert(2);
+		//g.$at.scrollTop=s.$at.scrollTop;
+		calcgutter();
 	});
 	$h("gutter reset",function()
 	{
@@ -1016,6 +1081,12 @@ $h("git push",function()
 })();
 </script>
 <script>
+	var ppmmh= $q.s(".mzheight").h()/10000;
+	
+	var mzw=$q.s(".mzwin").w();
+	var mzh=$q.s(".mzwin").h();
+	//alert(mzw+" "+mzh);
+	
 	$s("gutter");
 	codeedit(".txt");
 	
@@ -1052,7 +1123,11 @@ $h("git push",function()
 			
 		<input type="button" value="full code" onclick="$s('show code');">
 		<br>
+			
 		<input type="button" value="full edit code" onclick="$s('show edit code');">
+		<br>
+			
+		<input type="button" value="local paste" onclick="$s('local paste');">
 		<br>
 		<br>
 		
@@ -1095,6 +1170,10 @@ $h("git push",function()
 	}
 }
 </textarea>
+<textarea user="local" repo="local" path="clipboard" sha="" atscroll="0">	
+</textarea>
+	
+
 <textarea user="pre" repo="pre" path="/main" sha="" atscroll="0">(function()
 {
 	
@@ -1104,6 +1183,7 @@ $h("git push",function()
 	};
 })()
 </textarea>
+
 	
 	<div id="fvc"></div>
 
@@ -1242,6 +1322,16 @@ $h("git push",function()
 	var __at= $q.s(".txt");
 	
 	$s("load file",__at.attr("atuser"),__at.attr("atrepo"),__at.attr("atpath"));
+	
+	$h("local paste",function()
+	{
+		if(confirm("local paste into current?"))
+		{
+			$s("menu hide all");
+			var c= $q.s(`*[user="local"][repo="local"][path="clipboard"] ` ).val();
+			$q.s(".txt").val(c);
+		}
+	});
 	
 })();
 //alert(prompt("title\n hdhhd",""));
@@ -1531,6 +1621,7 @@ $h("format",function()
 	var t1=$codeFilter.cpp(txt.val());
 	txt.val(t1);
 });
+
 
 </script>
 	
