@@ -30,7 +30,7 @@ var openFile = function(event) {
           var text = reader.result;
           var node = document.getElementById('output');
           node.innerText = text;
-          console.log(reader.result.substring(0, 200));
+         alert(reader.result);
         };
         reader.readAsText(input.files[0]);
       };
