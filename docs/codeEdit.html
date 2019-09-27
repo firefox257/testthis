@@ -52,7 +52,7 @@
 		left:0;
 		width:8mm;
 		height:100%;
-		overflow:scroll;
+		overflow:hidden;
 		background-color:#ccc;
 		z-index:2;
 		font-size:3.5mm;
@@ -1018,8 +1018,6 @@ $h("git push",function()
 });
 	
 </script>
-
-
 	<div class="title">/main</div>
 	<div class="gutter">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br></div>
  	<textarea class="txt show" onscroll="$s('gutter top');" onkeyup="$s('gutter');" onpaste="setTimeout(function(){$s('gutter');},200);" atuser="local" atrepo="local" atpath="/main" atscroll="0"></textarea>
@@ -1165,6 +1163,9 @@ $h("git push",function()
 		<br>
 			
 		<input type="button" value="local paste" onclick="$s('local paste');">
+		<br>
+		
+		<input type="button" value="copy to clipboard" onclick="$s('to clip');">
 		<br>
 			
 		<input type="button" value="clear clipboard" onclick="$s('clear clip');">
@@ -1374,6 +1375,17 @@ $h("git push",function()
 			$q.s(".txt").val(c);
 		}
 	});
+	
+	$h("to clip",function()
+	{
+		if(confirm("copy all into clipboard?"))
+		{
+			$s("menu hide all");
+			setFile("local", "local","clipboard", $q.s(".txt").val());
+			$s("load file","local","local","clipboard");
+		}
+	});
+	
 	
 })();
 //alert(prompt("title\n hdhhd",""));
