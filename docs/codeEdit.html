@@ -507,7 +507,7 @@ var $s=msgc.send;
 		<div class="mzheight">
 		</div>
 		<div class="mzwin"></div>
-		<div class="mzgutter">h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br>h<br></div>
+		<div class="mzgutter">  </div>
 	</div>
 <script>
 	//https://api.github.com/repos/defunkt/ace/contents/build
@@ -640,7 +640,8 @@ git.commit("f755ae705e2422f96e9300457d497a37b6cc19a8", "firefox257", "testthis",
 $h("make code",function(func)
 {
 	
-	var p=$q.s("*[user='pre'][repo='pre'][path='/main']").val();
+	var p=getFile("pre","pre","/main");
+	//$q.s("*[user='pre'][repo='pre'][path='/main']").val();
 	for(var i=0;i<3;i++)
 	$q.a("#fvc *[user][repo][path]",function()
 	{
@@ -649,13 +650,14 @@ $h("make code",function(func)
 		var path=this.attr("path");
 		
 		var cid=`<!--${user}:${repo}:${path}-->`;
-		p=p.replace(cid,this.val());
+		p=p.replace(cid,getFile(user,repo,path));
 		
 	});
 	
 	eval("p="+p+";");
 	
-	var c=$q.s("*[user='local'][repo='local'][path='/main']").val();
+	var c=getFile("local","local","/main");
+	//$q.s("*[user='local'][repo='local'][path='/main']").val();
 	c=p(c);
 	for(var i=0;i<3;i++)
 	$q.a("#fvc *[user][repo][path]",function()
@@ -664,7 +666,7 @@ $h("make code",function(func)
 		var repo=this.attr("repo");
 		var path=this.attr("path");
 		
-		var tt=p(this.val());
+		var tt=p(getFile(user,repo,path));
 		var cid=`<!--${user}:${repo}:${path}-->`;
 		c=c.replace(cid,tt);
 		
@@ -679,7 +681,8 @@ $h("show code",function()
 	{
 		$s("menu hide all");
 		var txt= $q.s(`*[user="local"][repo="local"][path="clipboard"] `  );
-		txt.val(c);
+		//txt.val(c);
+		setFile("local", "local","clipboard",c);
 		$s("load file", "local",  "local", "clipboard");
 		alert("copied to local clip board");
 	});
@@ -690,7 +693,8 @@ $h("show edit code",function()
 	
 	$s("menu hide all");
 	var txt=$q.s(`*[user="local"][repo="local"][path="clipboard"] `  );
-	txt.val(document.documentElement.outerHTML);
+	//txt.val(document.documentElement.outerHTML);
+	setFile("local","local","clipboard", document.documentElement.outerHTML);
 	$s("load file", "local",  "local", "clipboard");
 	alert("copied to local clip board");
 });
@@ -972,7 +976,8 @@ $h("git push",function()
 		var repo=at.attr("atrepo");
 		var path=at.attr("atpath");
 		
-		var conf=$q.s("*[user='local'][repo='local'][path='/config']").val();
+		var conf=getFile("local","local","/config");
+		//$q.s("*[user='local'][repo='local'][path='/config']").val();
 		
 		eval("conf="+conf+";");
 		
@@ -1029,14 +1034,14 @@ $h("git push",function()
 	var mzgutter=$q.s(".mzgutter");
 	var mzh=$q.s(".mzwin").h();
 	
+	
 	while(mzgutter.$at.scrollHeight<=mzh)
 	{
 		mzgutter.append("h<br/>");
 		linecount++;
 	}
+	mzgutter.html("  ");
 	var lineh=parseInt(mzh/linecount)+1;
-	
-	//alert(lineh);
 	
 	function calcgutter()
 	{
@@ -1077,7 +1082,8 @@ $h("git push",function()
 		count=0;
 	});
 	
-	$s("gutter reset");
+	//$s("gutter reset");
+	
 })();
 </script>
 <script>
@@ -1085,7 +1091,37 @@ $h("git push",function()
 	
 	var mzw=$q.s(".mzwin").w();
 	var mzh=$q.s(".mzwin").h();
-	//alert(mzw+" "+mzh);
+	
+	function getFile(user,repo,path)
+	{
+		try
+		{
+			var c=$q.s(`*[user="${user}"][repo="${repo}"][path="${path}"]`).val();
+			return c;//window.atob(c);
+		}
+		catch(err)
+		{
+			alert("getfile error");
+			try
+			{
+				var c=$q.s(`*[user="${user}"][repo="${repo}"][path="${path}"]`).val();
+				return c;
+			}
+			catch(err1)
+			{}
+		}
+		return"";
+	}
+	
+	function setFile(user,repo,path,c)
+	{
+		try
+		{
+			$q.s(`*[user="${user}"][repo="${repo}"][path="${path}"]`).html(c);
+		}
+		catch(err)
+		{}
+	}
 	
 	$s("gutter");
 	codeedit(".txt");
@@ -1120,6 +1156,7 @@ $h("git push",function()
 			
 		<input type="button" value="html" onclick="$s('show html code');">
 		<br>
+		<br>
 			
 		<input type="button" value="full code" onclick="$s('show code');">
 		<br>
@@ -1128,6 +1165,9 @@ $h("git push",function()
 		<br>
 			
 		<input type="button" value="local paste" onclick="$s('local paste');">
+		<br>
+			
+		<input type="button" value="clear clipboard" onclick="$s('clear clip');">
 		<br>
 		<br>
 		
@@ -1199,6 +1239,8 @@ $h("git push",function()
 
 
 <script>
+	
+	
 (function()
 {
 	
@@ -1216,11 +1258,10 @@ $h("git push",function()
 		var atscroll=txt.attr("atscroll");
 		
 		var at=$q.s(`*[user='${user}'][repo='${repo}'][path='${path}']  `);
-		at.html(txt.val());
+		setFile(user, repo, path, txt.val());
 		at.attr("atscroll",atscroll);
 		if(user=="local" && repo=="local" && path=="/config")
 		{
-		
 			$s("make files",txt.val());
 		}
 		
@@ -1259,7 +1300,7 @@ $h("git push",function()
 		txt.attr("atpath",path);
 		
 		var at1=$q.s(`*[user='${user}'][repo='${repo}'][path='${path}'] `);
-		txt.val(at1.val());
+		txt.val(getFile(user,repo,path));
 		txt.attr("atscroll",at1.attr("atscroll"));
 		
 		var top = txt.attr('atscroll');
@@ -1328,7 +1369,8 @@ $h("git push",function()
 		if(confirm("local paste into current?"))
 		{
 			$s("menu hide all");
-			var c= $q.s(`*[user="local"][repo="local"][path="clipboard"] ` ).val();
+			var c=getFile("local", "local","clipboard");
+			//$q.s(`*[user="local"][repo="local"][path="clipboard"] ` ).val();
 			$q.s(".txt").val(c);
 		}
 	});
@@ -1620,6 +1662,12 @@ $h("format",function()
 	var txt=$q.s(".txt");
 	var t1=$codeFilter.cpp(txt.val());
 	txt.val(t1);
+});
+$h("clear clip",function()
+{
+	$s("menu hide all");
+	setFile("local", "local","clipboard"," ");
+	$s("load file","local","local","clipboard");
 });
 
 
