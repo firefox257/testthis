@@ -29,7 +29,7 @@ var openFile = function(event) {
         reader.onload = function(){
           var text = reader.result;
           var node = document.getElementById('output');
-          node.innerText = text;
+          node.innerHtml = text;
          alert(reader.result);
         };
         reader.readAsText(input.files[0]);
