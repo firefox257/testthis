@@ -2,7 +2,7 @@
 <html>
 
 <body>
-
+<div id = "output"></div>
 
 <script>
 function download(filename, text) {
@@ -20,8 +20,23 @@ function download(filename, text) {
 
 // Start file download.
 download("hello.txt","This is the content of my file :)");
-</script>
 
+
+
+var openFile = function(event) {
+        var input = event.target;
+
+        var reader = new FileReader();
+        reader.onload = function(){
+          var text = reader.result;
+          var node = document.getElementById('output');
+          node.innerText = text;
+          console.log(reader.result.substring(0, 200));
+        };
+        reader.readAsText(input.files[0]);
+      };
+</script>
+<input type='file' accept='text/plain' onchange='openFile(event)'/>
 </body>
 
 </html>
