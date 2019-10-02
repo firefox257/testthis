@@ -1084,6 +1084,89 @@ $h("git push",function()
 	
 })();
 </script>
+	<script>
+	//<input type='file'  accept='text/html' onchange='openFile(event)'/>
+(function()
+{
+	function saveTxt(name, txt)
+	{
+		var el = document.createElement('a');
+		el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt));
+		el.setAttribute('download', name);
+		el.style.display = 'none';
+		document.body.appendChild(el);
+		el.click();
+		document.body.removeChild(el);
+	}
+	function readTxtFile(e, func)
+	{
+		var input = e.target;
+		var reader = new FileReader();
+		reader.onload = function()
+		{
+			//$s(callbacktxt, reader.result);
+			func(reader.result);
+		};
+		//alert(input.files[0].name);
+		reader.readAsText(input.files[0]);
+	}
+	$h("export txt file", function () 
+	{
+		$s("menu hide all");
+		var name=prompt("export as");
+		if(name)
+		{
+			saveTxt(name, $q.s(".txt").val());
+		}
+	});
+	
+	$h("import txt file",function (e)
+	{
+		$s("menu hide all");
+		readTxtFile(e,function(t)
+		{
+			$q.s(".txt").val(t);
+		 });
+	});
+	
+	$h("export prj", function()
+	{
+		$s("menu hide all");
+		var name=prompt("export prj as");
+		if(name)
+		{
+			saveTxt(name, $q.s("#fv").html());
+		}
+	});
+	
+	$h("import prj",function (e)
+	{
+		$s("menu hide all");
+		readTxtFile(e,function(t)
+		{
+			$q.s("#fv").html(t);
+			$s("load file","local","local","/main");
+			
+		 });
+	});
+	
+	$h("export html", function()
+	{
+		$s("menu hide all");
+		var name=prompt("export html as");
+		if(name)
+		{
+			$s("make code", function(c)
+			{
+				saveTxt(name, c);
+			});
+		}
+	});
+	
+	
+	
+})();
+</script>
 <script>
 	var ppmmh= $q.s(".mzheight").h()/10000;
 	
@@ -1185,6 +1268,20 @@ $h("git push",function()
 		<br>
 		<input type="button" value="git browser" onclick="$s('show listView');">
 		<br>
+		<br>
+		<div>import txt</div>
+		<input type="file" accept=".txt,.html" onchange="$s('import txt file', event);">
+		<br>
+		<input type="button" value="export txt" onclick="$s('export txt file');">
+		<br>
+		<div>import prj</div>
+		<input type="file" accept=".txt,.html" onchange="$s('import prj', event);">
+		<br>
+		<input type="button" value="export prj" onclick="$s('export prj');">
+		<br>
+		<input type="button" value="export html" onclick="$s('export html');">
+		<br>
+			
 	</div>
 	<div class="qsave" onclick="$s('qsave');">qsave</div>
 	<div id="fv" style="display:none;">
@@ -1315,10 +1412,12 @@ $h("git push",function()
 	$h("make files",function(txt)
 	{
 		var c;
+		
 		eval("c="+txt+";");
 		
 		$q.a("#fvc *[user][repo][path]",function()
 		{
+			
 			var user=this.attr("user");
 			var repo=this.attr("repo");
 			var path=this.attr("path");
